@@ -51,18 +51,6 @@ export default defineConfig({
       '@types': path.resolve(__dirname, './types'),
     },
   },
-  // Optimize dependencies for dev server (Storybook).
-  // NOTE: do NOT self-include 'design-system-react' here — stories import
-  // components via relative paths, and pre-bundling the package by its own
-  // name forces Vite to resolve the (unbuilt) dist/ entry and crashes startup.
-  optimizeDeps: {
-    esbuildOptions: {
-      // Handle JSX authored in .js files (legacy source) during dev
-      loader: {
-        '.js': 'jsx',
-      },
-    },
-  },
   build: {
     commonjsOptions: {
       include: [/node_modules/, /design-tokens/],
