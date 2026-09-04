@@ -15,7 +15,10 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "forceConsistentCasingInFileNames": true,
-    "baseUrl": ".",
+    // TypeScript 7 no longer implicitly includes every installed @types/*
+    // package's globals. A few source files reference `process.env.NODE_ENV`,
+    // so `node` must be declared explicitly for the `process` global to resolve.
+    "types": ["node"],
     "paths": {
       "~/*": ["./*"],
       "@components/*": ["./components/*"],
