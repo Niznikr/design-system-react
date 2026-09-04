@@ -26,23 +26,29 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
-// Mock ResizeObserver
-global.ResizeObserver = vi.fn().mockImplementation(() => ({
-  observe: vi.fn(),
-  unobserve: vi.fn(),
-  disconnect: vi.fn(),
-}));
+// Mock ResizeObserver. Defined as a real class (not an arrow-returning vi.fn)
+// because @floating-ui/dom's autoUpdate calls `new ResizeObserver(...)`, and a
+// spy backed by an arrow implementation throws "is not a constructor" under new.
+class ResizeObserverMock {
+  observe = vi.fn();
+  unobserve = vi.fn();
+  disconnect = vi.fn();
+}
+global.ResizeObserver = ResizeObserverMock as unknown as typeof ResizeObserver;
 
-// Mock IntersectionObserver (used by overlays, carousel, lazy content)
-global.IntersectionObserver = vi.fn().mockImplementation(() => ({
-  observe: vi.fn(),
-  unobserve: vi.fn(),
-  disconnect: vi.fn(),
-  takeRecords: vi.fn().mockReturnValue([]),
-  root: null,
-  rootMargin: '',
-  thresholds: [],
-})) as unknown as typeof IntersectionObserver;
+// Mock IntersectionObserver (used by overlays, carousel, lazy content, and
+// @floating-ui/dom's autoUpdate, which likewise constructs it with `new`).
+class IntersectionObserverMock {
+  observe = vi.fn();
+  unobserve = vi.fn();
+  disconnect = vi.fn();
+  takeRecords = vi.fn().mockReturnValue([]);
+  root = null;
+  rootMargin = '';
+  thresholds = [];
+}
+global.IntersectionObserver =
+  IntersectionObserverMock as unknown as typeof IntersectionObserver;
 
 // jsdom does not implement layout — stub the APIs overlay/positioning code
 // (popover, combobox, date-picker, menu, tooltip, dialog) relies on.

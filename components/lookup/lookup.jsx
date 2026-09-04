@@ -19,7 +19,7 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 import escapeRegExp from 'lodash.escaperegexp';
-import isEqual from 'lodash.isequal';
+import { dequal as isEqual } from 'dequal';
 import classNames from 'classnames';
 
 // This component's `checkProps` which issues warnings to developers about properties

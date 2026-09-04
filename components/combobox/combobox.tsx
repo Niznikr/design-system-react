@@ -14,7 +14,7 @@ import React, {
 import assign from 'lodash.assign';
 import find from 'lodash.find';
 import reject from 'lodash.reject';
-import isEqual from 'lodash.isequal';
+import { dequal as isEqual } from 'dequal';
 import findIndex from 'lodash.findindex';
 import isFunction from 'lodash.isfunction';
 

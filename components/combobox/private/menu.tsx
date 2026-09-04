@@ -2,7 +2,7 @@
 /* Licensed under BSD 3-Clause - see LICENSE.txt or git.io/sfdc-license */
 
 import React, { type ReactNode, type ReactElement, type CSSProperties } from 'react';
-import isEqual from 'lodash.isequal';
+import { dequal as isEqual } from 'dequal';
 import classNames from 'classnames';
 
 import Icon from '../../icon';

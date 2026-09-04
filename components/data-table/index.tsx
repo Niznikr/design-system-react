@@ -10,7 +10,7 @@ import React, { type ReactElement, type ReactNode } from 'react';
 
 import classNames from 'classnames';
 import assign from 'lodash.assign';
-import isEqual from 'lodash.isequal';
+import { dequal as isEqual } from 'dequal';
 import memoize from 'memoize-one';
 import reject from 'lodash.reject';
 // This component's `checkProps` which issues warnings to developers about properties when in development mode (similar to React's built in development tools)
