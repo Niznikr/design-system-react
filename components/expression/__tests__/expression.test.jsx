@@ -38,6 +38,26 @@ describe('SLDSExpression', () => {
 			onDelete: vi.fn(),
 		};
 
+		it('renders without an `events` prop (events default to no-ops)', () => {
+			// Regression: the render dereferenced `this.props.events.onChangeResource`
+			// unguarded, so omitting `events` (as the Storybook stories do) threw
+			// "Cannot read properties of undefined (reading 'onChangeResource')".
+			const { container } = renderWithIconSettings(
+				<ExpressionCondition
+					id="test"
+					resourcesList={ResourcesList}
+					operatorsList={OperatorsList}
+				/>
+			);
+
+			expect(
+				container.querySelector('input[id="test-resource-selector"]')
+			).toBeInTheDocument();
+			expect(
+				container.querySelector('input[id="test-input"]')
+			).toBeInTheDocument();
+		});
+
 		it('renders resource selector', () => {
 			const { container } = renderWithIconSettings(
 				<ExpressionCondition

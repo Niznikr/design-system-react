@@ -56,9 +56,10 @@ export interface ExpressionConditionProps {
 	 */
 	className?: unknown[] | Record<string, unknown> | string;
 	/**
-	 * Callbacks for various expression condition events such as value change, delete etc
+	 * Callbacks for various expression condition events such as value change, delete etc.
+	 * Defaults to an empty object; individual callbacks are optional.
 	 */
-	events: ExpressionConditionEvents;
+	events?: ExpressionConditionEvents;
 	/**
 	 * If set to true, the component will focus on the first focusable input upon mounting. This is useful for accessibility when adding new conditions.
 	 */
@@ -106,6 +107,11 @@ const defaultProps: Partial<ExpressionConditionProps> = {
 		title: 'Condition',
 		deleteIcon: 'Delete Condition',
 	},
+	// All event fields are optional, so an empty object is a valid default. This
+	// keeps the render's `this.props.events.onChangeResource` (etc.) lookups from
+	// throwing when a consumer omits `events` — the callbacks simply pass through
+	// as `undefined`, which Combobox/input handlers tolerate.
+	events: {},
 	labels: {
 		label: '',
 		operator: 'Operator',
@@ -155,6 +161,7 @@ class ExpressionCondition extends React.Component<ExpressionConditionProps> {
 			this.props.assistiveText
 		);
 		const labels = assign({}, defaultProps.labels, this.props.labels);
+		const events = this.props.events || {};
 		return (
 			<li
 				className={classNames(
@@ -176,7 +183,7 @@ class ExpressionCondition extends React.Component<ExpressionConditionProps> {
 						<div className="slds-col">
 							<Combobox
 								events={{
-									onSelect: this.props.events.onChangeResource,
+									onSelect: events.onChangeResource,
 								}}
 								id={`${this.getId()}-resource-selector`}
 								multiple={false}
@@ -193,7 +200,7 @@ class ExpressionCondition extends React.Component<ExpressionConditionProps> {
 						<div className="slds-col slds-grow-none">
 							<Combobox
 								events={{
-									onSelect: this.props.events.onChangeOperator,
+									onSelect: events.onChangeOperator,
 								}}
 								id={`${this.getId()}-operator-selector`}
 								multiple={false}
@@ -213,7 +220,7 @@ class ExpressionCondition extends React.Component<ExpressionConditionProps> {
 								id={`${this.getId()}-input`}
 								label={labels.value}
 								value={this.props.value}
-								onChange={this.props.events.onChangeValue}
+								onChange={events.onChangeValue}
 								disabled={!this.props.resourceSelected}
 							/>
 						</div>
@@ -227,7 +234,7 @@ class ExpressionCondition extends React.Component<ExpressionConditionProps> {
 										iconCategory="utility"
 										iconName="delete"
 										iconVariant="border-filled"
-										onClick={this.props.events.onDelete}
+										onClick={events.onDelete}
 										assistiveText={{
 											icon: assistiveText.deleteIcon,
 										}}
