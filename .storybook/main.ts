@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'url';
 import type { StorybookConfig } from '@storybook/react-vite';
 
 const config: StorybookConfig = {
@@ -79,6 +80,35 @@ const config: StorybookConfig = {
     // (latest) rather than a committed static stylesheet. See preview-head.html.
     { from: '../node_modules/@salesforce-ux/design-system-2/dist/css', to: '/slds2' },
   ],
+
+  viteFinal: async (config) => {
+    // Redirect `column-resizer` to a small interop shim (see
+    // ./shims/column-resizer.js). vite 8's Rolldown dependency optimizer no
+    // longer unwraps this UMD bundle's `{ __esModule: true, default: Ctor }`
+    // export the way vite 5's esbuild optimizer did, so DataTable's default
+    // import resolves to the wrapper object and `new ColumnResizer(...)` throws
+    // "is not a constructor" in the dev server. The shim re-exports the actual
+    // constructor as its default. Scoped to Storybook only — the library build
+    // and vitest resolve the interop correctly on their own.
+    config.resolve = config.resolve || {};
+    const shim = fileURLToPath(
+      new URL('./shims/column-resizer.js', import.meta.url)
+    );
+    // Use the array (regex) alias form with an anchored pattern so ONLY the bare
+    // `column-resizer` specifier is rewritten. The object form does prefix
+    // matching, which would also rewrite the shim's own
+    // `column-resizer/dist/column-resizer.js` import and break resolution.
+    const existingAlias = config.resolve.alias;
+    const aliasArray = Array.isArray(existingAlias)
+      ? existingAlias
+      : Object.entries(existingAlias || {}).map(([find, replacement]) => ({
+          find,
+          replacement: replacement as string,
+        }));
+    aliasArray.push({ find: /^column-resizer$/, replacement: shim });
+    config.resolve.alias = aliasArray;
+    return config;
+  },
 
   typescript: {
     check: false, // Disable type checking in Storybook (we do it separately)
