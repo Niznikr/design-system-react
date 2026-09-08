@@ -39,7 +39,7 @@ const sampleItems = [
 		heading: 'Visit App Exchange',
 		description: 'Discover more apps and solutions for your business.',
 		buttonLabel: 'Learn More',
-		src: 'https://via.placeholder.com/800x450?text=App+Exchange',
+		src: '/assets/images/carousel/carousel-01.jpg',
 		href: '#',
 	},
 	{
@@ -47,7 +47,7 @@ const sampleItems = [
 		heading: 'Click to Customize',
 		description: 'Customize your Salesforce experience to fit your needs.',
 		buttonLabel: 'Customize',
-		src: 'https://via.placeholder.com/800x450?text=Customize',
+		src: '/assets/images/carousel/carousel-02.jpg',
 		href: '#',
 	},
 	{
@@ -55,7 +55,7 @@ const sampleItems = [
 		heading: 'Download Salesforce Today',
 		description: 'Get the Salesforce mobile app and work from anywhere.',
 		buttonLabel: 'Download',
-		src: 'https://via.placeholder.com/800x450?text=Mobile+App',
+		src: '/assets/images/carousel/carousel-03.jpg',
 		href: '#',
 	},
 	{
@@ -63,7 +63,7 @@ const sampleItems = [
 		heading: 'Explore Lightning',
 		description: 'Experience the new Lightning interface.',
 		buttonLabel: 'Explore',
-		src: 'https://via.placeholder.com/800x450?text=Lightning',
+		src: '/assets/images/carousel/carousel-02.jpg',
 		href: '#',
 	},
 ];
