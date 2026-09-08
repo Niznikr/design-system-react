@@ -116,6 +116,15 @@ const config: StorybookConfig = {
     reactDocgenTypescriptOptions: {
       shouldExtractLiteralValuesFromEnum: true,
       shouldRemoveUndefinedFromOptional: true,
+      // Do NOT let docgen emit `Component.displayName = "<derived name>"`.
+      // Several components (GlobalNavigationBar, its Region, etc.) set a static
+      // `displayName` to an SLDS constant (e.g. 'SLDSGlobalNavigationBarRegion')
+      // and rely on it at runtime: GlobalNavigationBar filters its children by
+      // `child.type.displayName === GLOBAL_NAVIGATION_BAR_REGION`. Docgen's
+      // name-derived override (e.g. 'GLOBAL_NAVIGATION_BAR_REGION') clobbers
+      // those values, so the child filter matches nothing and the bar renders
+      // empty. Keeping the real displayName intact fixes that.
+      setDisplayName: false,
       propFilter: (prop) => {
         // Filter out props from node_modules
         if (prop.parent) {
