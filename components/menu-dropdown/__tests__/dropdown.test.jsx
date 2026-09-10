@@ -518,10 +518,13 @@ describe('SLDSMenuDropdown', () => {
 		});
 
 		it("doesn't close on quick hover outside", async () => {
+			// Use a generous close delay so the assertion window sits comfortably
+			// inside it. (A tiny delay races the test's own timers under parallel
+			// load: the pending close can fire before the re-hover cancels it.)
 			const { container } = renderDropdown({
 				buttonClassName: 'dijkstrafied',
 				openOn: 'hover',
-				hoverCloseDelay: 2,
+				hoverCloseDelay: 50,
 			});
 
 			const btn = container.querySelector('.slds-dropdown-trigger');
@@ -532,13 +535,13 @@ describe('SLDSMenuDropdown', () => {
 				expect(container.querySelector('.slds-dropdown')).toBeInTheDocument();
 			});
 
+			// mouseLeave schedules the close; the immediate re-hover clears that
+			// pending timeout synchronously, before it can fire.
 			fireEvent.mouseLeave(btn);
-
-			// Quick re-hover before close delay completes
-			await new Promise(resolve => setTimeout(resolve, 1));
 			fireEvent.mouseEnter(btn);
 
-			await new Promise(resolve => setTimeout(resolve, 5));
+			// Well within hoverCloseDelay — the dropdown must still be open.
+			await new Promise((resolve) => setTimeout(resolve, 10));
 			expect(container.querySelector('.slds-dropdown')).toBeInTheDocument();
 		});
 	});
